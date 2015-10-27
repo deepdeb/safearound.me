@@ -1,0 +1,77 @@
+body  {
+  background-color: #FFF;
+  padding: 10px;
+}
+
+#header {
+  background-color: #EEE;
+  padding: 10px;
+  height: 100px;
+}
+
+#header_name  {
+  padding: 10px;
+  height: 100px;
+  float: left;
+  width: 600px;
+  font-size: 46pt;
+  font-family: "Futura";
+  font-weight: bold;
+  font-style: italic;
+  color:#23238e;
+}
+
+#header_contact {
+  padding: 10px;
+  height: 100px;
+  float: right;
+  font-size: 28pt;
+  width: 180px;
+  font-weight: bold;
+  font-family: "Futura";
+  text-align: center;
+  margin-top: 15px;
+  margin-right: 50px;
+}
+
+#header_team {
+  padding: 10px;
+  font-size: 28pt;
+  height: 100px;
+  float: right;
+  width: 130px;
+  font-weight: bold;
+  font-family: "Futura";
+  text-align: center;
+  margin-top: 15px;
+}
+
+a{
+  text-decoration: none;
+}
+
+
+#header_about {
+  padding: 10px;
+  height: 100px;
+  font-size: 28pt;
+  float: left;
+  width: 130px;
+  font-weight: bold;
+  font-family: "Futura";
+  align-content: center;
+  margin-top: 15px;
+}
+
+#main{
+  padding: 10px;
+  height: 660px;
+  width: 1280px;
+  margin-left: 110px;
+
+}
+
+#login  {
+  margin-left: 325px;
+  margin-bottom: 800px;
+}

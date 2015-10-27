@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  	<script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>safearound.me</title>
+    <style>
+      html, body {
+        height: 100%;
+        margin: 10px;
+        padding: 0;
+      }
+      #map {
+        height: 100%;
+       }
+    </style>
+  </head>
+  <body>
+    <header><h1 style = "height: 100px; float: none; width: 600px; font-size: 46pt; font-family: "Futura"; font-weight: bold; font-style: italic; color: #23238e; text-decoration: none;"> safearound.me </h1></header>
+    <div id="map"></div>
+    <div id="check"></div>
+    <br><br><br>
+    <header><h2> <a href = "InputMap.html"> Input Map </a></header>
+      <br><br>
+    <header><h4> <a href = "index.html"> Back </a></header>
+    <script>
+
+var latlngtime = new Firebase('https://incandescent-fire-950.firebaseio.com/');
+var userlocation = {'lat': 40.424, 'lng': -86.929};
+
+function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
+	  var R = 6371; // Radius of the earth in km
+	  var dLat = deg2rad(lat2-lat1);  // deg2rad below
+	  var dLon = deg2rad(lon2-lon1);
+	  var a =
+	    Math.sin(dLat/2) * Math.sin(dLat/2) +
+	    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+	    Math.sin(dLon/2) * Math.sin(dLon/2)
+	    ;
+	  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+	  var d = R * c; // Distance in km
+	  return d;
+	}
+
+function deg2rad(deg) {
+	return deg * (Math.PI/180)
+}
+
+function initMap() {
+  // Create the map.
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 15,
+    center: userlocation,
+    mapTypeId: google.maps.MapTypeId.TERRAIN
+  });
+
+
+  var alertoccurred = 0;
+
+ latlngtime.on("child_added", function(snapshot) {
+	currentdata = snapshot.val();
+
+    var hotspot = new google.maps.Circle({
+      strokeColor: '#FF0000',
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: '#FF0000',
+      fillOpacity: 0.35,
+      map: map,
+      center: currentdata.center,
+      radius: 50
+    });
+
+    var marker = new google.maps.Marker({
+    	position: currentdata.center,
+    	map:map
+    });
+
+    var userdistance1 = getDistanceFromLatLonInKm(userlocation.lat, userlocation.lng, currentdata.center.lat, currentdata.center.lng);
+	var userdistance = userdistance1.toPrecision(4);
+    console.log (userdistance);
+
+    var contentString = '<div id="content">'+
+    '<div id="siteNotice">'+
+    '</div>'+
+    '<h1 id="firstHeading" class="firstHeading">Illness Report: </h1>'+
+    '<div id="bodyContent">'+
+    '<p><b>Time Reported: </b> ' + currentdata.time +
+    //'<p><b>Closest Address: </b>' + address +
+    '<p><b>Latitude: </b>' + currentdata.center.lat +
+    '<p><b>Longitude: </b>' + currentdata.center.lng +
+    '<p><b>Distance From You (km): </b>' + userdistance+
+    '</div>'+
+    '</div>';
+
+    var infowindow = new google.maps.InfoWindow({
+    	content: contentString
+   	});
+    marker.addListener('click', function(){
+    	infowindow.open(map,marker);
+    });
+    if (userdistance< 0.5&& alertoccurred==0){
+    	alert ('Safety Alert: You are within 500 m of reported illness.');
+		alertoccurred = 1;
+    }
+
+  });
+}
+
+    </script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyASWeqMnKGtnEuyKCGPAD5lELzduKxFsNg&signed_in=true&callback=initMap"></script>
+</html>
